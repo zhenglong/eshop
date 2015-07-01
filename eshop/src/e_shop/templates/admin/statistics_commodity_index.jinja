@@ -1,0 +1,29 @@
+{% extends "admin/base.jinja" %}
+{% block header %}
+	<style>
+		h3 {
+			text-align:center;
+			vertical-align:bottom;
+		}
+		h3 .button {
+			margin-bottom:0em;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	<h3>
+		单品分析
+		<a href="#" class="button split secondary tiny">最近一星期 <span data-dropdown="drop-date-range"></span></a><br>
+		<ul id="drop-date-range" class="f-dropdown" data-dropdown-content>
+		  <li><a href="#">最近一个月</a></li>
+		  <li><a href="#">最近半年</a></li>
+		  <li><a href="#">最近一年</a></li>
+		</ul>
+	</h3>
+	<div id="chart-container" style="height:500px;"></div>	
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("bower_components/echarts/build/dist/echarts.js") }}"></script>
+	<script src="{{ static("admin/statistics_commodity_index.js") }}"></script>
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends "admin/base.jinja" %}
+
+{% block header %}
+	<link rel="stylesheet" href="{{ static("bower_components/angular-ui-select/dist/select.css") }}">
+	<link rel="stylesheet" href="{{ static("admin/style/select2.css") }}">
+	<link rel="stylesheet" href="{{ static("admin/style/main.css") }}">
+	<style>
+	.container {
+		margin-top:0.25rem;
+	}
+	table {
+		width:100%;
+	}
+	.reveal-modal .buttons .button {
+		margin-bottom:0px;
+	}
+	.query-params {
+		position:relative;
+	}
+	#clear-query {
+		position:absolute;
+		right:0.125em;
+		top:0.25em;
+	}
+	.query-params label,.query-params .query-value {
+		color:#6F6F6F;
+	}
+	.query-params .query-value {
+		font-size:1.25em;
+	}
+	@media (min-height:31.2988em) {/* 600px */
+		.reveal-modal .expandable {
+			max-height:300px;
+			overflow:auto;
+		}
+	}
+	@media (min-width:40.0625em) {
+		.button.hide-for-small-only {
+			display:inline-block !important;
+		}
+		.query-params label {
+			display:inline;
+		}
+		.query-params .query-value {
+			margin-left:0.125em;
+			margin-right:0.25em;
+			display:inline-block;
+			width:8em;
+		}
+		.query-params .query-value:hover {
+			color:#008CBA;
+			text-decoration:underline;
+		}
+	}
+	label.my-checkbox {
+		text-align:right;
+	}
+	#add-meta-field {
+		margin-bottom:0em;
+		vertical-align:bottom;
+	}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="row container">
+		<div class="small-12 column">
+			<div class="clearfix">
+				<a type="button" class="button small info left" href="/manage/commodity/">添加宝贝</a>
+				<button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button small right dropdown">操作</button>
+				<ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
+					<li><a href="#" ng-click="onBatchShelve()" ng-bind="query.is_off_shelve ? '批量上架' : '批量下架'"></a></li>
+					<li><a href="#" ng-click="onBatchDeleteCommodities()">批量删除</a></li>
+					<li><a href="#" data-reveal-id="filterCommodityModal" ng-click="onPreEditQuery()">筛选</a></li>
+					<li><a href="#" data-reveal-id="batchDiscountModal">批量折扣</a></li>
+				</ul>
+			</div>
+			<div class="panel query-params">
+				<a href="#" class="hide-for-small-only" id="clear-query" ng-click="onClearQuery()">清除过滤条件</a>
+				<h3 class="subheader show-for-small-only">过滤条件</h3>
+				<label>宝贝名称</label>
+				<a href="#" class="query-value" ng-bind="query.keyword || '(任意)'" data-reveal-id="filterCommodityModal" ng-click="onPreEditQuery()"></a>
+				<label>分类</label>
+				<a href="#" class="query-value" ng-bind="getCategoryName(query.category_id) || '(任意)'" data-reveal-id="filterCommodityModal" ng-click="onPreEditQuery()"></a>
+				<label>是否下架</label>
+				<a href="#" class="query-value" ng-bind="query.is_off_shelve ? '是' : '否'" data-reveal-id="filterCommodityModal" ng-click="onPreEditQuery()"></a>
+			</div>
+			<table>
+				<thead>
+					<tr>
+						<th><label class="my-checkbox"><input type="checkbox" ng-model="checkAll" ng-change="onCheckAllChanged()" /><span></span></label></th>
+						<th>宝贝名称</th>
+						<th>原价</th>
+						<th>折扣价</th>
+						<th>促销活动</th>
+						<th>库存</th>
+						<th>品牌</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat-start="commodity in commodities" ng-repeat-end>
+						<td><label class="my-checkbox"><input type="checkbox" ng-model="commodity.isSelected" /><span></span></label></td>
+						<td ng-bind="commodity.name"></td>
+						<td ng-bind="commodity.base_price"></td>
+						<td ng-bind="commodity.discount_price"></td>
+						<td></td>
+						<td ng-bind="commodity.stock"></td>
+						<td ng-bind=commodity.brand_name></td>
+						<td>
+							<a href="#" data-reveal-id="setDiscountModal" class="tiny secondary round button split" ng-click="onDiscount(commodity)">
+								折扣<span ng-attr-data-dropdown="{{'{{'}}'operation_' + $index{{'}}'}}"></span>
+							</a>
+							<br>
+							<ul class="f-dropdown" data-dropdown-content ng-attr-id="{{'{{'}}'operation_' + $index{{'}}'}}">
+								<li>
+									<a ng-attr-href="{{ '{{' }}'/commodity/' + commodity.id + '/'{{ '}}' }}">更新</a>
+								</li>
+								<li>
+									<a href="#" ng-click="onShelve(commodity)" ng-bind="query.is_off_shelve ? '上架' : '下架'"></a>
+								</li>
+							</ul>
+						</td>
+					</tr>
+					<tr ng-if="!commodities || !commodities.length">
+						<td colspan="8">没有宝贝信息，点击"添加宝贝"</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="filterCommodityModal" class="reveal-modal" data-reveal aria-labelledby="filterCommodityModalTitle" aria-hidden="true" role="dialog">
+		<h2 id="filterCommodityModalTitle">过滤宝贝</h2>
+		<a class="close-reveal-modal">&times;</a>
+		<form>
+			<label>宝贝名称</label>
+			<input type="text" placeholder="宝贝名称" ng-model="query.keyword" />
+			<label>选择类别</label>
+			<select ng-options="v.id as v.name for v in categories" ng-model="query.category_id">
+				<option></option>
+			</select>
+			<label class="my-checkbox text-left"><input type="checkbox" ng-model="query.is_off_shelve"><span></span>是否下架</label>
+		</form>
+		<div class="clearfix buttons">
+			<button type="button" class="button small secondary right" ng-click="onCancelToEditQuery()">关闭</button>
+			<button type="button" class="button small right" ng-click="onSearch()">查询</button>
+		</div>
+	</div>
+	<div id="batchDiscountModal" class="reveal-modal" data-reveal aria-labelledby="batchDiscountModalTitle" aria-hidden="true" role="dialog">
+		<h2 id="batchDiscountModalTitle">批量折扣</h2>
+		<a class="close-reveal-modal">&times;</a>
+		<form>
+			<label>选择折扣</label>
+			<ui-select multiple="multiple" ng-model="appliedDiscounts" theme="select2" style="width:300px;">
+				<ui-select-match>{{ '{{' }}$item.name{{ '}}' }}</ui-select-match>
+				<ui-select-choices repeat="discount in discounts | filter: {name:$select.search}">
+					<div ng-bind-html="discount.name | highlight: $select.search"></div>
+					<small>{{ '{{' }}discount.name{{ '}}' }}</small>
+				</ui-select-choices>
+			</ui-select>
+		</form>
+		<div class="clearfix buttons">
+			<button type="button" class="button small secondary right" ng-click="onCancelBatchDiscount()">关闭</button>
+			<button type="button" class="button small right" ng-click="onBatchDiscount()">确定</button>
+		</div>
+	</div>
+	<div id="setDiscountModal" class="reveal-modal" data-reveal aria-labelledby="setDiscountModalTitle" aria-hidden="true" role="dialog">
+		<h2 id="setDiscountModalTitle" ng-bind-html="discountModalTitle()"></h2>
+		<a class="close-reveal-modal">&times;</a>
+		<form>
+			<label>选择折扣</label>
+			<ui-select multiple="multiple" ng-model="appliedDiscounts" theme="select2" style="width:300px;">
+				<ui-select-match>{{ '{{' }}$item.name{{ '}}' }}</ui-select-match>
+				<ui-select-choices repeat="discount in discounts | filter: {name:$select.search}">
+					<div ng-bind-html="discount.name | highlight: $select.search"></div>
+					<small>{{ '{{' }}discount.name{{ '}}' }}</small>
+				</ui-select-choices>
+			</ui-select>
+		</form>
+		<div class="clearfix buttons">
+			<button type="button" class="button small secondary right" ng-click="onCancelBatchDiscount()">关闭</button>
+			<button type="button" class="button small right" ng-click="onBatchDiscount()">确定</button>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("bower_components/angular-sanitize/angular-sanitize.js") }}"></script>
+	<script src="{{ static("bower_components/angular-ui-select/dist/select.js") }}"></script>
+	<script src="{{ static("admin/commodity_list.js") }}"></script>
+{% endblock %}
+
+

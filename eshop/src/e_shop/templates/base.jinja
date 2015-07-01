@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="App">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+		<title>{{ title }}</title>
+		<link rel="stylesheet" href="{{ static("bower_components/ionic/release/css/ionic.css") }}">
+		{% block header %}
+		{% endblock %}
+	</head>
+	<body ng-controller="MainCtrl">
+		{% block body %}
+		{% endblock %}
+		<script src="{{ static("bower_components/jquery/dist/jquery.js") }}"></script>
+		<script src="{{ static("bower_components/angular/angular.js") }}"></script>
+		<script src="{{ static("bower_components/angular-animate/angular-animate.js") }}"></script>
+		<script src="{{ static("bower_components/angular-sanitize/angular-sanitize.js") }}"></script>
+		<script src="{{ static("bower_components/angular-ui-router/release/angular-ui-router.js") }}"></script>
+		<script src="{{ static("bower_components/ionic/release/js/ionic.js") }}"></script>
+		<script src="{{ static("bower_components/ionic/release/js/ionic-angular.js") }}"></script>
+		{% block script %}
+		{% endblock %}
+	</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends "base.jinja" %}
+
+{% block header %}
+<link rel="stylesheet" href="{{ static("style/login.css") }}">
+{% endblock %}
+
+{% block body %}
+{% csrf_token %}
+<div class="logmod">
+  <div class="logmod__wrapper">
+    <div class="logmod__container">
+      <ul class="logmod__tabs">
+        <li data-tabtar="lgm-2"><a href="#">登录</a></li>
+        <li data-tabtar="lgm-1"><a href="#">注册</a></li>
+      </ul>
+      <div class="logmod__tab-wrapper">
+      <div class="logmod__tab lgm-1">
+        <div class="logmod__heading">
+          <span class="logmod__heading-subtitle">输入个人信息创建<strong>我的网店</strong>帐号</span>
+        </div>
+        <div class="logmod__form">
+          <form id="register-form" class="simform">
+            <div class="sminputs">
+              <div class="input full">
+                <label class="string optional" for="user-name">电子邮箱地址*</label>
+                <input class="string optional" ng-model="registration.email" maxlength="255" id="user-email" placeholder="电子邮箱地址" type="text" size="50" />
+              </div>
+            </div>
+            <div class="sminputs">
+              <div class="input string optional">
+                <label class="string optional" for="user-pw">登录密码 *</label>
+                <input class="string optional" ng-model="registration.password" maxlength="255" id="user-pw" placeholder="登录密码" type="password" size="50" />
+              </div>
+              <div class="input string optional">
+                <label class="string optional" for="user-pw-repeat">再次输入密码 *</label>
+                <input class="string optional" maxlength="255" id="user-pw-repeat" placeholder="再次输入密码" type="password" size="50" />
+              </div>
+            </div>
+            <div class="simform__actions">
+              <button class="sumbit button button-balanced" ng-click="onRegister()" name="commit" type="button">创建帐号</button>
+              <span class="simform__actions-sidetext">同意<a class="special" href="#" target="_blank" role="link">条款和隐私协议</a></span>
+            </div> 
+          </form>
+        </div> 
+      </div>
+      <div class="logmod__tab lgm-2">
+        <div class="logmod__heading">
+          <span class="logmod__heading-subtitle">输入电子邮箱和密码登录<strong>我的网店</strong></span>
+        </div> 
+        <div class="logmod__form">
+          <form id="login-form" class="simform">
+            <div class="sminputs">
+              <div class="input full">
+                <label class="string optional" for="user-name">电子邮箱地址*</label>
+                <input class="string optional" ng-model="vm.email" maxlength="255" id="user-email" placeholder="电子邮箱地址" size="50" />
+              </div>
+            </div>
+            <div class="sminputs">
+              <div class="input full">
+                <label class="string optional" for="user-pw">密码 *</label>
+                <input class="string optional" ng-model="vm.password" maxlength="255" id="user-pw" placeholder="密码" type="password" size="50" />
+              </div>
+            </div>
+            <input type="hidden" name="next" value="{{ next }}" />
+            <div class="simform__actions">
+              <button class="sumbit button button-balanced" ng-click="onLogin()" name="commit" type="button">登录</button>
+              <span class="simform__actions-sidetext"><a class="special" role="link" href="#">忘记密码?点击这里</a></span>
+            </div> 
+          </form>
+        </div> 
+        <div class="logmod__alter">
+          <div class="logmod__alter-container">
+            <a href="#" class="connect qq">
+              <div class="connect__context">
+				  <img src="/static/images/qq.png" height="18" />
+                  通过<strong>QQ号码</strong>登录
+              </div>
+            </a>
+          </div>
+        </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+	<script src="{{ static("utility.js") }}"></script>
+	<script src="{{ static("login.js") }}"></script>
+{% endblock %}

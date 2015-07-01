@@ -1,0 +1,16 @@
+django admin:
+tristan root101
+
+package dependency:
+
+
+application: eshop
+client id: z4VcCyOxBCuWyhYLQoCOtf6y6iA8wbJiyGBeMkYv
+client secret: r4NyRWEY86bjZAV7XHgHx5Y6b4TGfAlvOuQMwlbWYed6AU46JqcT4WYkJX0i6qIRA29lEaM1jgLgvGLX80POvFjEumwd8zVP6uUZRrDtilZolO6iDW8hNyyInED32VXL
+Client type: confidential
+Authorization Grant Type: password
+
+sample to get access token:
+curl -X POST -d "grant_type=password&username=tristan&password=root101" -u"z4VcCyOxBCuWyhYLQoCOtf6y6iA8wbJiyGBeMkYv:r4NyRWEY86bjZAV7XHgHx5Y6b4TGfAlvOuQMwlbWYed6AU46JqcT4WYkJX0i6qIRA29lEaM1jgLgvGLX80POvFjEumwd8zVP6uUZRrDtilZolO6iDW8hNyyInED32VXL" http://localhost:8000/o/token/
+
+curl -H "Authorization: Bearer KIuSiHbB8DGoCvO6swVoB1dXXUFpao" http://localhost:8000/users/

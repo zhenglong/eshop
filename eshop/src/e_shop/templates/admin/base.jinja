@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html {{ ('ng-app="App"'if not manualSetup else '')|safe }}>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+		<title>{{ title }}</title>
+		<link rel="stylesheet" href="{{ static("bower_components/fontawesome/css/font-awesome.css") }}">
+		<link rel="stylesheet" href="{{ static("bower_components/foundation/css/normalize.css") }}">
+		<link rel="stylesheet" href="{{ static("bower_components/foundation/css/foundation.css") }}">
+		<link rel="stylesheet" href="{{ static("admin/style/main.css") }}">
+		{% block header %}
+		{% endblock %}
+	</head>
+	<body ng-controller="MainCtrl">
+		<div class="sticky">
+			<nav class="top-bar" data-topbar role="navigation">
+				<ul class="title-area">
+					<li class="name">
+						<h1><a href="#">我的网店管理后台</a></h1>
+					</li>
+					<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+				</ul>
+				<section class="top-bar-section">
+					<ul class="left">
+						<li class="{{ 'active' if activeNav == 0 else '' }}"><a href="/manage/categories">分类管理</a></li>
+						<li class="{{ 'active' if activeNav == 1 else '' }}"><a href="/manage/commodity-metas">产品参数维护</a></li>
+						<li class="{{ 'active' if activeNav == 2 else '' }}"><a href="/manage/commodities">我的宝贝</a></li>
+						<li class="{{ 'active' if activeNav == 4 else '' }}"><a href="/manage/brands">品牌管理</a></li>
+						<li class="{{ 'active' if activeNav == 5 else '' }} has-dropdown">
+							<a href="#">营销</a>
+							<ul class="dropdown">
+								<li><a href="/manage/discounts">促销活动</a></li>
+								<li><a href="/manage/discounts">优惠券</a></li>
+							</ul>
+						</li>
+						<li class="{{ 'active' if activeNav == 6 else '' }} has-dropdown">
+							<a href="#">数据分析</a>
+							<ul class="dropdown">
+								<li><a href="/manage/sale-statistics">销售额汇总</a></li>
+								<li><a href="/manage/sale-statistics-commodity">单品比较</a></li>
+								<li><a href="/manage/sale-statistics-category">分类汇总</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="right">
+						<li class="divider"></li>
+						<li class="has-dropdown">
+							<a href="#" class="user-name">
+								<div class="user-header-photo">
+									<img src="{{ static("images/unknown.svg") }}" style="top:-0.6rem;" />
+								</div>
+								<span>{{ user.username }}</span>
+							</a>
+							<ul class="dropdown">
+								<li><a href="/account/user-profile/">修改个人资料</a></li>
+								<li><a href="#" ng-click="base.logout()">退出登录</a></li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+			</nav>
+		</div>
+		{% csrf_token %}
+		{% block body %}
+		{% endblock %}
+		<script src="{{ static("bower_components/foundation/js/vendor/modernizr.js") }}"></script>
+		<script src="{{ static("bower_components/jquery/dist/jquery.js") }}"></script>
+		<script src="{{ static("bower_components/foundation/js/vendor/jquery.cookie.js") }}"></script>
+		<script src="{{ static("bower_components/foundation/js/vendor/placeholder.js") }}"></script>
+		<script src="{{ static("bower_components/foundation/js/vendor/fastclick.js") }}"></script>
+		<script src="{{ static("bower_components/foundation/js/foundation.js") }}"></script>
+		<script src="{{ static("bower_components/angular/angular.js") }}"></script>
+		<script src="{{ static("bower_components/underscore/underscore.js") }}"></script>
+		<script src="{{ static("admin/main.js") }}"></script>
+		<script src="{{ static("admin/base.js") }}"></script>
+		<script>
+		var access_token = '{{ ac.access_token }}';
+		$(function() {
+			$(document).foundation();
+		});
+		</script>
+		{% block script %}
+		{% endblock %}
+	</body>
+</html>

@@ -1,0 +1,78 @@
+.float-left {
+	float:left;
+}
+
+.float-right {
+	float:right;
+}
+
+.clear:after {
+	content:'';
+	display:block;
+	clear:both;
+}
+
+.line-through {
+	text-decoration:line-through;
+}
+
+.assertive {
+	color:#ef473a;
+}
+
+.my-tabs {
+	/*position:relative;*/
+}
+
+.my-tabs .my-tab-items {
+	width:100%;
+	background-color:#fff;
+}
+
+.my-tabs .my-tab-items.fixed {
+	position:fixed;
+	-webkit-transform: translate3d(0, 0, 0); 
+	-moz-transform: translate3d(0, 0, 0); 
+	-ms-transform: translate3d(0, 0, 0); 
+	transform: translate3d(0, 0, 0); 
+	-webkit-backface-visibility: hidden; 
+	-moz-backface-visibility: hidden; 
+	-ms-backface-visibility: hidden; 
+	backface-visibility: hidden;  
+	-webkit-perspective: 1000; 
+	-moz-perspective: 1000; 
+	-ms-perspective: 1000; 
+	perspective: 1000;
+}
+
+.my-tabs .my-tab-item {
+	display:inline-block;
+	text-align:center;
+	padding:0.25em;
+	border-width:0px;
+	color:#888;
+}
+
+.my-tabs .my-tab-item.half-width {
+	width:49%;
+	text-decoration:none;
+}
+
+.my-tabs .my-tab-item.active {
+	color:#222;
+	font-weight:bold;
+	border-bottom:3px solid #387ef5;
+}
+
+.my-tabs > .my-tab-page {
+	display:none;
+}
+
+
+.my-tabs > .my-tab-page.active {
+	display:block;
+}
+
+.test {
+	border:1px solid black !important;
+}

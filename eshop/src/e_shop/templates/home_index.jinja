@@ -1,0 +1,127 @@
+{% extends "base.jinja" %}
+
+{% block header %}
+	<link rel="stylesheet" href="{{ static("bower_components/slick-carousel/slick/slick.css") }}">
+	<link rel="stylesheet" href="{{ static("bower_components/slick-carousel/slick/slick-theme.css") }}">
+	<style type="text/css">
+		.main-content {
+			background:#f0f0f0;
+		}
+		.masonry-brick {
+			background:$fefefe;
+			border:1px solid #fefefe;
+			box-shadow:#a0a0a0 1px 1px 10px;
+			-webkit-box-shadow:#a0a0a0 1px 1px 10px;
+			-moz-box-shadow:#a0a0a0 1px 1px 10px;
+			-o-box-shadow:#a0a0a0 1px 1px 10px;
+			-ms-box-shadow:#a0a0a0 1px 1px 10px;
+			margin-bottom:10px;
+		}
+		.eshop-price {
+			color:red;
+		}
+		.eshop-search {
+			margin-top:5px;
+			margin-bottom:5px;
+		}
+		
+		.slick-slider {
+			margin-bottom:0.25em;
+			height:80px;
+		}
+		
+		.slick-dots {
+			text-align:right;
+			bottom:0px;
+		}
+		.slick-dots li{
+			margin:0px;
+		}
+	</style>
+	<script>
+	if (!String.prototype.format) {
+		String.prototype.format = function() {
+			var fmt = this;
+			var params = Array.prototype.slice.call(arguments);
+			return fmt.replace(/(\{(\d+)\})/g, function(match, firstCap, index) {
+				return params[index] || match;
+			});
+		};
+	}
+	var head = document.head || document.getElementsByTagName('head')[0],
+		stylesheet = document.createElement('style');
+	stylesheet.style='text/css';
+	var css = '@media (max-width:440px) {' +
+		'.masonry-brick > img, .masonry-brick p {' +
+			'width:{0}px;'+
+		'}'+
+	'}';
+	css = css.format((window.innerWidth - 34) / 2);
+	if (stylesheet.styleSheet) {
+		stylesheet.styleSheet.cssText=css;
+	} else {
+		stylesheet.appendChild(document.createTextNode(css));
+	}
+	head.appendChild(stylesheet);
+	</script>	
+{% endblock %}
+
+{% block body %}
+	<ion-nav-view>
+		<ion-side-menus enable-menu-with-back-views="false">
+			<ion-side-menu-content>
+				<ion-content class="padding main-content">
+					<slick infinite="true" dots="true" autoplay="true" autoplaySpeed="2000" arrows="false">
+						<div>slide #1</div>
+						<div>slide #2</div>
+						<div>slide #3</div>
+					</slick>
+					<div class="list list-inset eshop-search">
+						<label class="item item-input">
+							<i class="icon ion-search placeholder-icon"></i>
+							<input type="text" placeholder="搜索宝贝">
+						</label>
+					</div>
+					</div>
+					<div masonry="{gutter:10}">
+						<div class="masonry-brick" ng-repeat="brick in bricks">
+							<img ng-src="{{'{{'}} brick.src {{'}}'}}" alt="A masonry brick">
+							<div>
+								<p>
+									三星A3000流苏水钻边框
+								</p>
+								<span class="eshop-price">
+									<i>￥</i>
+									36.00
+								</span>
+							</div>
+						</div>
+					</div>
+				</ion-content>					
+			</ion-side-menu-content>
+			<ion-side-menu side="left">
+				<ion-header-bar class="bar-assertive">
+					<h1 class="title">宝贝分类</h1>
+				</ion-header-bar>
+				<ion-content>
+					<ul class="list">
+						<a href="#" class="item" menu-close>卧室家具</a>
+						<a href="#" class="item" menu-close>沙发</a>
+						<a href="#" class="item" menu-close>厨房用品</a>
+						<a href="#" class="item" menu-close>防盗门</a>
+					</ul>
+				</ion-content>
+			</ion-side-menu>
+		</ion-side-menus>
+	</ion-nav-view>	
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("bower_components/masonry/dist/masonry.pkgd.js") }}"></script>
+	<script src="{{ static("bower_components/imagesloaded/imagesloaded.pkgd.js") }}"></script>
+	<script src="{{ static("bower_components/angular-masonry/angular-masonry.js") }}"></script>
+	<script src="{{ static("bower_components/slick-carousel/slick/slick.js") }}"></script>
+	<script src="{{ static("bower_components/angular-slick/dist/slick.js") }}"></script>
+	<script src="{{ static("utility.js") }}"></script>
+	<script src="{{ static("home_index.js") }}"></script>
+{% endblock %}

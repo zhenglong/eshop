@@ -1,0 +1,172 @@
+{% extends "admin/base.jinja" %}
+
+{% block header %}
+	<link rel="stylesheet" href="{{ static("admin/style/main.css") }}">
+	<style>
+	.container {
+		margin-top:0.25rem;
+	}
+	table {
+		width:100%;
+	}
+	.reveal-modal .buttons .button {
+		margin-bottom:0px;
+	}
+	.query-params {
+		position:relative;
+	}
+	#clear-query {
+		position:absolute;
+		right:0.125em;
+		top:0.25em;
+	}
+	.query-params label,.query-params .query-value {
+		color:#6F6F6F;
+	}
+	.query-params .query-value {
+		font-size:1.25em;
+	}
+	@media (min-height:31.2988em) {/* 600px */
+		.reveal-modal .expandable {
+			max-height:300px;
+			overflow:auto;
+		}
+	}
+	@media (min-width:40.0625em) {
+		.button.hide-for-small-only {
+			display:inline-block !important;
+		}
+		.query-params label {
+			display:inline;
+		}
+		.query-params .query-value {
+			margin-left:0.125em;
+			margin-right:0.25em;
+			display:inline-block;
+			width:8em;
+		}
+		.query-params .query-value:hover {
+			color:#008CBA;
+			text-decoration:underline;
+		}
+	}
+	label.my-checkbox {
+		text-align:right;
+	}
+	#add-meta-field {
+		margin-bottom:0em;
+		vertical-align:bottom;
+	}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="row container">
+		<div class="small-12 column">
+		<div class="clearfix">
+			<button type="button" data-reveal-id="addCommodityMetaModal" class="button small info left" ng-click="onPreAddMeta()">添加产品参数</button>
+			<button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button small right dropdown">操作</button>
+			<ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
+				<li><a href="#" ng-click="onBatchDeleteMetas()">批量删除</a></li>
+				<li><a href="#" data-reveal-id="filterCommodityMetaModal" ng-click="onPreEditQuery()">筛选</a></li>
+			</ul>
+		</div>
+		<div class="panel query-params hide" ng-class="{hide:isQueryEmpty()}">
+			<a href="#" class="hide-for-small-only" id="clear-query" ng-click="onClearQuery()">清除过滤条件</a>
+			<h3 class="subheader show-for-small-only">过滤条件</h3>
+			<label>产品名称</label>
+			<a href="#" class="query-value" ng-bind="query.keyword || '(任意)'" data-reveal-id="filterCommodityMetaModal" ng-click="onPreEditQuery()"></a>
+			<label>分类</label>
+			<a href="#" class="query-value" ng-bind="getCategoryName(query.category_id) || '(任意)'" data-reveal-id="filterCommodityMetaModal" ng-click="onPreEditQuery()"></a>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th><label class="my-checkbox check-all"><input type="checkbox" ng-model="checkAll" ng-change="checkAllChanged()" /><span></span></label></th>
+					<th>产品名称</th>
+					<th>分类</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat-start="meta in metas" ng-repeat-end>
+					<td><label class="my-checkbox"><input type="checkbox" ng-model="meta.isSelected" /><span></span></label></td>
+					<td ng-bind="meta.name"></td>
+					<td ng-bind="getCategoryName(meta.category_id)"></td>
+					<td>
+						<button type="button" class="button tiny alert" ng-click="onDeleteMeta(meta)">删除</button>
+						<button type="button" class="button tiny secondary hide-for-small-only" ng-click="onPreUpdateMeta(meta)">更新参数</button>
+					</td>
+				</tr>
+				<tr ng-if="!metas || !metas.length">
+					<td colspan="4">没有产品参数，点击“添加产品参数”进行配置</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</div>
+	<div id="addCommodityMetaModal" class="reveal-modal" data-reveal aria-labelledby="addCommodityMetaModalTitle" aria-hidden="true" role="dialog">
+		<h2 id="addCommodityMetaModalTitle" ng-bind="isAddingMeta() ? '新建产品参数' : '编辑产品参数'"></h2>
+		<a class="close-reveal-modal">&times;</a>
+		<form class="expandable">
+			<div class="row">
+				<div class="small-12 medium-6 column">
+					<label>产品名称</label>
+					<input type="text" placeholder="产品名称" ng-model="vm.name" />
+				</div>
+				<div class="small-12 medium-6 column">
+					<label>选择类别</label>
+					<select ng-options="v.id as v.name for v in categories" ng-model="vm.category_id"></select>
+				</div>
+				<div class="small-12 column">
+					<h3 class="subheader">自定义字段列表
+						<button id="add-meta-field" class="button tiny secondary" ng-click="onAddField()">添加字段</button>
+					</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>字段名称</th>
+								<th>字段类型</th>
+								<th>说明</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="field in vm.fields">
+								<td><input type="text" ng-model="field.field_name" /></td>
+								<td>
+									<select ng-options="v.id as v.text for v in fieldTypes" ng-model="field.field_type"></select>
+								</td>
+								<td><input type="text" ng-model="field.note" /></td>
+								<td><button type="button" class="button alert tiny" ng-click="onRemoveField(field)">删除</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</form>
+		<div class="clearfix buttons">
+			<button type="button" class="button small secondary right" ng-click="onCancel()">放弃</button>
+			<button type="button" class="button small right" ng-click="onSave($event)">保存</button>
+		</div>
+	</div>
+	<div id="filterCommodityMetaModal" class="reveal-modal" data-reveal aria-labelledby="filterCommodityMetaModalTitle" aria-hidden="true" role="dialog">
+		<h2 id="filterCommodityMetaModalTitle">过滤产品参数</h2>
+		<a class="close-reveal-modal">&times;</a>
+		<form>
+			<label>产品名称</label>
+			<input type="text" placeholder="产品名称" ng-model="query.keyword" />
+			<label>选择类别</label>
+			<select ng-options="v.id as v.name for v in categories" ng-model="query.category_id"></select>
+		</form>
+		<div class="clearfix buttons">
+			<button type="button" class="button small secondary right" ng-click="onCancelToEditQuery()">关闭</button>
+			<button type="button" class="button small right" ng-click="onSearch()">查询</button>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("admin/commodity_meta_list.js") }}"></script>
+{% endblock %}
+

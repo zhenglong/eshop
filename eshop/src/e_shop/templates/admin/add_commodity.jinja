@@ -1,0 +1,139 @@
+{% extends "admin/base.jinja" %}
+
+{% block header %}
+	<link rel="stylesheet" href="{{ static("bower_components/ng-ckeditor/ng-ckeditor.css") }}">
+	<link rel="stylesheet" href="{{ static("admin/style/main.css") }}">
+	<style>
+	.container {
+		margin-top:0.25rem;
+	}
+	.buttons > button {
+		margin-top:0.25rem;
+	}
+	.thumbnail-container .thumbnail {
+		float:left;
+		margin-right:0.5em;
+		border:2px inset #008cba;
+		position:relative;
+		overflow:hidden;
+	}
+	.thumbnail-container .thumbnail:hover {
+		box-shadow: 0 0 6px 1px rgba(0, 140, 186, 0.5);
+	}
+	.thumbnail-container .thumbnail-overlay {
+		z-index:2;
+		position:absolute;
+		top:-1.5em;
+		right:-1.5em;
+		width:3em;
+		height:3em;
+		border-radius:3em;
+		border:1px solid #F04124;
+		background-color:#F04124;
+		transition: background-color 300ms ease-out;
+	}
+	.thumbnail-container .thumbnail-overlay > i {
+		position:relative;
+		top:1.2em;
+		left:0.5em;
+	}
+	.thumbnail-container .thumbnail-overlay:hover {
+		border-color:#CF2A0E;
+		background-color:#CF2A0E;
+		cursor:pointer;
+	}
+	.thumbnail-container .thumbnail-overlay:hover > i {
+		color:white;
+		font-weight:bold;
+	}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="row container">
+		<div class="small-12 column">
+			<h2 id="addCommodityMetaModalTitle">添加宝贝</h2>
+			<form>
+				<div class="row">
+					<div class="small-12 medium-6 column">
+						<label>宝贝名称</label>
+						<input type="text" placeholder="宝贝名称" ng-model="vm.name" />
+						<label>品牌</label>
+						<select ng-model="vm.brand_id"></select>
+						<label>产品门类</label>
+						<select ng-options="v.id as v.name for v in categories" ng-model="vm.category_id" ng-change="onCategoryChanged()">
+							<option></option>
+						</select>
+						<label>品类</label>
+						<select ng-model="vm.meta_id" ng-options="v.id as v.name for v in metas" ng-change="onMetaChanged()" >
+							<option></option>
+						</select>
+					</div>
+					<div class="small-12 medium-6 column">
+						<label>原价</label>
+						<input type="text" placeholder="原价" ng-model="vm.base_price" />
+						<label>折扣价</label>
+						<input type="text" placeholder="折扣价" ng-model="vm.discount_price" />
+						<label>库存量</label>
+						<input type="text" placeholder="库存量" ng-model="vm.stock" />
+					</div>
+				</div>
+				<div class="row">
+					<!-- 宝贝展示图片上传 -->
+					<div class="small-12 medium-6 column">
+						<label>上传宝贝图片(最多只能上传3张图片)</label>
+						<input type="file" class="button tiny secondary" id="file-upload" ng-disabled="files.length>3" multiple/>
+					</div>
+					<div class="small-12 column">
+						<div class="thumbnail-container clearfix">
+							<div class="thumbnail" ng-repeat="file in files track by $index">
+								<image ng-src="{{ '{{' }}file.thumbnail{{ '}}' }}" />
+								<div class="thumbnail-overlay" ng-click="onDeleteFile(file)"><i class="fa fa-close"></i></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<h3 class="subheader">详细信息</h3>
+				<!-- 根据类别自动加载详细信息的字段 -->
+				<div class="panel">
+					<div ng-if="isMetaChange && !!vm.meta_id">
+						<button type="button tiny" ng-click="onGenerateDetails()">生成详细参数表单</button>
+					</div>
+					<div class="row">
+						<div ng-if="!isMetaChange">
+							<div class="small-12 medium-6 column">
+								<label ng-bind="field.field_name" ng-repeat-start="field in vm.left_fields"></label>
+								<input type="text" ng-model="field.value" ng-repeat-end />
+							</div>
+							<div class="small-12 medium-6 column">
+								<label ng-bind="field.field_name" ng-repeat-start="field in vm.right_fields"></label>
+								<input type="text" ng-model="field.value" ng-repeat-end />
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 图文描述为在线编辑器，可以上传图片，并生成链接插入编辑器中 -->
+				<textarea ckeditor="editorOptions" ng-model="vm.description" placeholder="宝贝的图文描述"></textarea>
+			</form>
+			<div class="clearfix buttons">
+				<button type="button" class="button small secondary right" ng-click="onCancel()">放弃</button>
+				<button type="button" class="button small right" ng-click="onSave()">保存</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("bower_components/angular-sanitize/angular-sanitize.js") }}"></script>
+	<script src="{{ static("bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js") }}"></script>
+	<script src="{{ static("bower_components/jquery-file-upload/js/jquery.iframe-transport.js") }}"></script>
+	<script src="{{ static("bower_components/jquery-file-upload/js/jquery.fileupload.js") }}"></script>
+	<script src="{{ static("bower_components/ckeditor/ckeditor.js") }}"></script>
+	<script src="{{ static("bower_components/ng-ckeditor/ng-ckeditor.js") }}"></script>
+	<script src="{{ static("admin/add_commodity.js") }}"></script>
+	<script>
+	commodity_id = {{ 0 if not commodity_id else commodity_id }}
+	</script>
+{% endblock %}
+
+

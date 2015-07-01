@@ -1,0 +1,107 @@
+{% extends "admin/base.jinja" %}
+
+{% block header %}
+	<link rel="stylesheet" href="{{ static("bower_components/ng-ckeditor/ng-ckeditor.css") }}">
+	<link rel="stylesheet" href="{{ static("admin/style/main.css") }}">
+	<style>
+	.container {
+		margin-top:0.25rem;
+	}
+	.buttons > button {
+		margin-top:0.25rem;
+	}
+	.thumbnail-container .thumbnail {
+		float:left;
+		margin-right:0.5em;
+		border:2px inset #008cba;
+		position:relative;
+		overflow:hidden;
+	}
+	.thumbnail-container .thumbnail:hover {
+		box-shadow: 0 0 6px 1px rgba(0, 140, 186, 0.5);
+	}
+	.thumbnail-container .thumbnail-overlay {
+		z-index:2;
+		position:absolute;
+		top:-1.5em;
+		right:-1.5em;
+		width:3em;
+		height:3em;
+		border-radius:3em;
+		border:1px solid #F04124;
+		background-color:#F04124;
+		transition: background-color 300ms ease-out;
+	}
+	.thumbnail-container .thumbnail-overlay > i {
+		position:relative;
+		top:1.2em;
+		left:0.5em;
+	}
+	.thumbnail-container .thumbnail-overlay:hover {
+		border-color:#CF2A0E;
+		background-color:#CF2A0E;
+		cursor:pointer;
+	}
+	.thumbnail-container .thumbnail-overlay:hover > i {
+		color:white;
+		font-weight:bold;
+	}
+	
+	h2,h2 em,h2 span {
+		vertical-align:bottom;
+	}
+	
+	.user-header-photo.full-size {
+		width:8em;
+		height:8em;
+		border-radius:4em;
+	}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="row container">
+		<div class="small-12 column">
+			<h2 id="addCommodityMetaModalTitle" style="font-size:1em;">
+				<div class="user-header-photo full-size">
+					<img src="{{ static("images/unknown.svg") }}" ng-click="onStartUpload()" />
+					<input id="file-upload" type="file" style="display:none;"/>
+				</div>
+				<em style="font-size:1.5em;">{{ user.username }}</em>
+				<span>的用户资料</span>
+			</h2>
+			<form>
+				<div class="row">
+					<div class="small-12 medium-6 column">
+						<label>显示名称</label>
+						<input type="text" placeholder="显示名称" ng-model="vm.name" />
+						<label>地址</label>
+						<input type="text" placeholder="地址" ng-model="vm.address" />
+					</div>
+					<div class="small-12 medium-6 column">
+						<label>手机号码</label>
+						<input type="text" placeholder="手机号码" ng-model="vm.mobile" />
+						<label>固定电话</label>
+						<input type="text" placeholder="固定电话" ng-model="vm.tel" />
+					</div>
+				</div>
+			</form>
+			<div class="clearfix buttons">
+				<button type="button" class="button small secondary right" ng-click="onCancel()">放弃</button>
+				<button type="button" class="button small right" ng-click="onSave()">保存</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("bower_components/angular-sanitize/angular-sanitize.js") }}"></script>
+	<script src="{{ static("bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js") }}"></script>
+	<script src="{{ static("bower_components/jquery-file-upload/js/jquery.iframe-transport.js") }}"></script>
+	<script src="{{ static("bower_components/jquery-file-upload/js/jquery.fileupload.js") }}"></script>
+	<script src="{{ static("bower_components/ckeditor/ckeditor.js") }}"></script>
+	<script src="{{ static("bower_components/ng-ckeditor/ng-ckeditor.js") }}"></script>
+	<script src="{{ static("admin/user_profile.js") }}"></script>
+{% endblock %}
+
+

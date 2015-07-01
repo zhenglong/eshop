@@ -1,0 +1,95 @@
+{% extends "admin/base.jinja" %}
+
+{% block header %}
+	<link rel="stylesheet" href="{{ static("admin/style/main.css") }}">
+	<link rel="stylesheet" href="{{ static("bower_components/vis/dist/vis.css") }}">
+	<link rel="stylesheet" href="{{ static("bower_components/foundation-daterangepicker/daterangepicker.css") }}">
+	<style>
+	.container {
+		margin-top:0.25rem;
+	}
+	  /* alternating column backgrounds */
+  .vis-time-axis .grid.vis-odd {
+    background: #f5f5f5;
+  }
+
+  /* gray background in weekends, white text color */
+  .vis-time-axis .vis-grid.vis-saturday,
+  .vis-time-axis .vis-grid.vis-sunday {
+    background: gray;
+  }
+  .vis-time-axis .vis-text.vis-saturday,
+  .vis-time-axis .vis-text.vis-sunday {
+    color: white;
+  }
+	.alert-box {
+		margin-bottom:0.25em;
+	}
+	.alert-box > p {
+		margin-bottom:0em;
+	}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="row container">
+		<div class="small-12 column">
+			<div data-alert class="alert-box warning">
+				<p ng-if="!filtered.length">最近一个月没有促销活动，赶紧来送给小伙伴惊喜吧！</p>
+				<a href="#" class="close">&times;</a>
+			</div>
+			<h3>促销活动</h3>
+			<form>
+				<div class="small-12 medium-4 column">
+					<label>活动名称</label>
+					<input type="text" ng-model="currentEvent.name" />
+					<label>起止日期</label>
+					<input type="text" id="date-range" ng-model="currentEvent.dateRange" />
+					<label>使用次数</label>
+					<input type="text" placeholder="不限使用次数" ng-model="currentEvent.limit_per_user" />
+				</div>
+				<div class="small-12 medium-4 column">
+					<label>优惠券类型</label>
+					<select ng-model="currentEvent.type"></select>
+					<label>折扣</label>
+					<input type="text" ng-model="currentEvent.discount" />
+					<label>全场打折</label>
+					<div class="switch round large" tabindex="0">
+						<input type="checkbox" id="is-all-applied" ng-model="currentEvent.is_all_applied" />
+						<label for="is-all-applied"></label>
+					</div>
+				</div>
+				<div class="small-12 column">
+					<button type="button" class="button small" ng-click="onPublish()">发布</button>
+					<button type="button" class="button small secondary" ng-click="onReset()">清空</button>
+				</div>
+			</form>
+			<hr/>			
+			<div id="timeline"></div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("bower_components/moment/min/moment-with-locales.js") }}"></script>
+	<script src="{{ static("bower_components/vis/dist/vis.js") }}"></script>
+	<script src="{{ static("bower_components/foundation-daterangepicker/daterangepicker.js") }}"></script>
+	<script src="{{ static("admin/discount_list.js") }}"></script>
+	<script>
+		$(function() {
+			moment().locale('zh-cn');
+			$('#date-range').daterangepicker({
+				format:'YYYY-MM-DD',
+				locale: {
+					applyLabel:'设置',
+					cancelLabel:'取消',
+					fromLabel:'从',
+					toLabel:'到',
+					weekLabel:'周',
+					customRangeLabel:'自定义范围',
+				}
+			});
+		});
+	</script>
+{% endblock %}
+

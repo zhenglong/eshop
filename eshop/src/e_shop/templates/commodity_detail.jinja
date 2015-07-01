@@ -1,0 +1,163 @@
+{% extends "base.jinja" %}
+
+{% block header %}
+	<link rel="stylesheet" href="{{ static("bower_components/slick-carousel/slick/slick.css") }}">
+	<link rel="stylesheet" href="{{ static("bower_components/slick-carousel/slick/slick-theme.css") }}">
+	<link rel="stylesheet" href="{{ static("style/main.css") }}">
+	<style type="text/css">
+		.slick-slider {
+			margin-bottom:0.25em;
+			height:80px;
+		}
+		.slick-list, .slick-track, .slick-slide {
+			height:100%;
+		}
+		.slick-dots {
+			text-align:right;
+			bottom:0px;
+		}
+		.slick-dots li{
+			margin:0px;
+		}
+		.price {
+			font-size:1.8em;
+			font-weight:normal;
+		}
+		.stock {
+			font-weight:bold;
+		}
+		#basic-info {
+			color:#444;
+			padding:0.25em;
+		}
+		.comment-act {
+			padding:0;
+		}
+		.comment-act > .button {
+			margin:0;
+			padding:0;
+		}
+		.commodity-name {
+			
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<ion-content overflow-scroll="true" scrollbar-x="false" id="commodity-detail-content">
+	<slick infinite="true" dots="true" arrows="false">
+		<div>产品图片 #1</div>
+		<div>产品图片 #2</div>
+		<div>产品图片 #3</div>
+	</slick>
+	<div class="card" id="basic-info">
+		<h4 class="commodity-name">ALLIN 2015夏季新款韩版polo衫，男 短袖T恤 翻领撞色男士短袖T恤</h3>
+		<p><strong class="assertive price">￥300</strong> 元</p>
+		<div class="clear">
+			<div class="float-left">价格 <span class="line-through">￥700</span> 元</div>
+			<div class="float-right">库存 <em class="stock">12</em> 件</div>
+		</div>
+	</div>
+	<div class="card">
+		<div class="item item-divider">
+			评价
+		</div>
+		<div class="item">
+			<p>baballalaa</p>
+		</div>
+		<div class="item">
+			<p>baballalaa</p>
+		</div>
+		<div class="item">
+			<p>baballalaa</p>
+		</div>
+		<div class="item">
+			<p>baballalaa</p>
+		</div>
+		<div class="item">
+			<p>baballalaa</p>
+		</div>
+		<div class="item comment-act">
+			<button class="button button-full button-clear button-stable">点击加载更多评价</button>
+		</div>
+		<div class="item item-divider comment-act">
+			<button class="button button-full button-clear button-positive">发表评价</button>
+		</div>
+	</div>
+	<div class="card">
+		<div class="my-tabs" id="commodity-detail">
+			<div class="my-tab-items">
+				<a class="my-tab-item half-width active" href="#firstTab">
+					图文介绍
+				</a>
+				<a class="my-tab-item half-width" href="#secondTab">
+					产品参数
+				</a>
+			</div>			
+			<div class="active my-tab-page" id="firstTab">
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+				<p>this is for the first tab</p>
+			</div>
+			<div class="my-tab-page" id="secondTab">
+				<p>this is for the second tab</p>
+				<p>this is for the second tab</p>
+				<p>this is for the second tab</p>
+			</div>
+		</div>
+	</div>
+	</ion-content>
+{% endblock %}
+
+{% block script %}
+	<script src="{{ static("bower_components/slick-carousel/slick/slick.js") }}"></script>
+	<script src="{{ static("bower_components/angular-slick/dist/slick.js") }}"></script>
+	<script src="{{ static("bower_components/sticky-kit/jquery.sticky-kit.js") }}"></script>
+	<script src="{{ static("main.js") }}"></script>
+	<script src="{{ static("commodity_detail.js") }}"></script>
+	<script type="text/javascript">
+	$(function() {
+		var $scollContainer = $('#commodity-detail-content');
+		var $detailContainer = $('#commodity-detail');
+		var parentOffset = $detailContainer.offset();
+		var $item = $('#commodity-detail > .my-tab-items');
+		var itemHeight = $item.height();
+		var itemWidth = $item.width();
+		var parentHeight = $detailContainer.height();
+		var maxScoll = parentOffset.top + parentHeight - itemHeight;
+		$scollContainer.on('scroll', function()  {
+			var top = $scollContainer.scrollTop();
+			if (top >= parentOffset.top && top <= maxScoll) {
+				$item.addClass('fixed').css({
+					'width' : itemWidth + 'px',
+					'top' : (top)+'px'});
+			} else {
+				$item.removeClass('fixed').css({
+					'width' : '',
+					'top' : ''});
+			}
+		});
+	});
+	</script>
+{% endblock %}
