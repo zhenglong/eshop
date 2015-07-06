@@ -76,6 +76,7 @@ class UserSerializer(Serializer):
     mobile = CharField(max_length=50)
     tel = CharField(max_length=50)
     address = CharField(max_length=200)
+    photos = UploadFileSerializer(many = True)
 
 class AjaxResultSerializer(Serializer):
     data = CharField()

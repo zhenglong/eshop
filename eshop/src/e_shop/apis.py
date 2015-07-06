@@ -17,7 +17,7 @@ from rest_framework import status,permissions
 from datetime import datetime
 import os
 from rest_framework.renderers import JSONRenderer
-from e_shop.renders import PNGRenderer, JPEGRenderer
+#from e_shop.renders import PNGRenderer, JPEGRenderer
 from PIL import Image
 from PIL.Image import ANTIALIAS
 from StringIO import StringIO
@@ -26,6 +26,7 @@ from django.http.response import HttpResponse
 from e_shop.utility import to_bool
 from oauth2_provider.ext.rest_framework.authentication import OAuth2Authentication
 from oauth2_provider.ext.rest_framework.permissions import TokenHasReadWriteScope
+import base64
 
 class StatusCodeExtension(object):
     success = 280
@@ -63,6 +64,8 @@ class BaseApiView(APIView):
 class user_profile(BaseApiView):
     def get(self, request):
         data = facades.UserFacade.get_from_auth_id(request.user.id)
+        for p in data.photos:
+                p.thumbnail = '/api/file/' + str(p.id)
         serializer = serializers.UserSerializer(data)
         return self.ajax_result(serializer.data)
     def post(self, request):
@@ -70,6 +73,25 @@ class user_profile(BaseApiView):
         vm.auth_user_id = request.user.id
         data = FacadeFactory(request.user).get_obj(facades.UserFacade).save(vm)
         return self.ajax_result(data, message = u'成功保存')
+
+def read_image_as_data_uri(request, file_model):
+    im = Image.open(default_storage.path(file_model.name))
+    size = int(request.query_params.get('width', im.size[0])),int(request.query_params.get('height', im.size[1]))
+    im.thumbnail(size, ANTIALIAS)
+    sio = StringIO()
+    im.save(sio, 'JPEG')
+    data = sio.getvalue()
+    sio.close()
+    return 'data:image/{0};base64,{1}'.format(file_model.format.strip('.'), base64.b64encode(data))
+
+class get_user_photo(BaseApiView):
+    def get(self, request):
+        data = facades.UserFacade.get_from_auth_id(request.user.id)
+        data_uri = None
+        if len(data.photos)>0:
+            photo = data.photos[0]
+            data_uri = read_image_as_data_uri(request, photo)
+        return Response(data_uri)
 
 class category_list(BaseApiView):
     def get(self, request):
@@ -245,7 +267,7 @@ class file_upload(BaseApiView):
     def do_pre_upload(self, request):
         pass
     def do_upload(self, request, file_name=u'files[]'):
-        self.do_pre_upload()
+        self.do_pre_upload(request)
         temp_file = request.FILES[file_name]
         wrapped_file = UploadedFile(temp_file)
         name = default_storage.save(None, wrapped_file)
@@ -276,18 +298,12 @@ class file_get(BaseApiView):
         return self.ajax_result(serializer.data, message=u'操作成功')
 
 class file_data(BaseApiView):
-    renderer_classes = (PNGRenderer,JPEGRenderer)
+    #renderer_classes = (PNGRenderer,JPEGRenderer)
     def get(self, request, file_id):
         view_model = FacadeFactory(request.user).get_obj(facades.UploadFileFacade).get(file_id)
         #data = default_storage.open(view_model.name, 'rb')
-        im = Image.open(default_storage.path(view_model.name))
-        size = int(request.query_params.get('width', im.size[0])),int(request.query_params.get('height', im.size[1]))
-        im.thumbnail(size, ANTIALIAS)
-        sio = StringIO()
-        im.save(sio, 'JPEG')
-        data = sio.getvalue()
-        sio.close()
-        return Response(data, content_type=file_data.media_type(view_model.format))
+        
+        return Response(read_image_as_data_uri(request, view_model))
     @staticmethod
     def media_type(fmt):
         if (not fmt):
@@ -345,13 +361,12 @@ class file_upload_from_ckeditor(file_upload):
     
 class file_upload_from_user(file_upload):
     def do_pre_upload(self, request):
-        user = facades.UserFacade.get_from_auth_id(request.user.user_id)
+        user = facades.UserFacade.get_from_auth_id(request.user.id)
         facade = FacadeFactory(request.user).get_obj(facades.UploadFileFacade)
-        file_obj = user.uploadFiles.first()
-        if file_obj is None:
-            return
-        facade.delete(file_obj.id)
-        default_storage.delete(file_obj.name)
+        FacadeFactory(request.user).get_obj(facades.UserFacade).delete_all_files()
+        for file_obj in user.photos:
+            facade.delete(file_obj.id)
+            default_storage.delete(file_obj.name)
     def get_object_id(self, request):
         return facades.UserFacade.get_from_auth_id(request.user.id).id
     def do_action(self, request, object_id, file_id):

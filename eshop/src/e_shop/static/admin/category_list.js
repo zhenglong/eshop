@@ -192,4 +192,5 @@ angular.module('App', ['utility', 'ngJsTree', 'base'])
 				$scope.treeInstance.jstree(true)._append_json_data($scope.currentCategory, arr, cb);
 			});
 		};
+		$scope.base.onInitialize();
 	}]);

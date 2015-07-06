@@ -78,6 +78,7 @@ angular.module('App', ['utility','base'])
 				});
 		};
 		(function onInitialize() {
+			$scope.base.onInitialize();
 			$('#file-upload').fileupload({
 				url:actions.fileUpload + utility.queryParams({object_id : 0}),
 				done: function(e, data) {

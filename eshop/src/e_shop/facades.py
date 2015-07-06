@@ -256,33 +256,47 @@ class UploadFileFacade(BaseFacade):
         return obj_map(entity, UploadFileViewModel)
     def save(self, viewModel):
         entity = obj_map(viewModel, UploadFile)
+        if self._context is not None:
+            entity.user_id = self._context.user_id
         return self._repository.save(entity)
     def delete(self, entity_id):
+        entity = self.get(entity_id)
+        if entity is None:
+            return
         return self._repository.delete(entity_id)
 
 class UserFacade(BaseFacade):
     def __init__(self, context):
-        self._respository = UserRepository()
+        self._repository = UserRepository()
         super(UserFacade, self).__init__(context)
     def get(self, entity_id):
-        entity = self._respository.get(entity_id)
+        entity = self._repository.get(entity_id)
         if entity is None:
             return None
-        return obj_map(entity, UserViewModel)
+        return obj_map(entity, UserViewModel, rules={
+                                                     'photos':lambda e: map(lambda f:obj_map(f, UploadFileViewModel), e.uploadFiles)
+                                                     })
     @staticmethod
     def get_from_auth_id(auth_id):
         entity = UserRepository().get_from_auth_id(auth_id)
         if entity is None:
             return None
-        return obj_map(entity, UserViewModel)
+        return obj_map(entity, UserViewModel, rules={
+                                                     'photos':lambda e: map(lambda f:obj_map(f, UploadFileViewModel), e.uploadFiles)
+                                                     })
     def save(self, viewModel):
         entity = obj_map(viewModel, User)
-        self._respository.save(entity)
+        self._repository.save(entity)
     def add_file(self, file_id, file_type):
         entity = self.get(self._context.user_id)
         if entity is None:
             return
         return self._repository.add_file(self._context.user_id, file_id, file_type)
+    def delete_all_files(self):
+        entity = self.get(self._context.user_id)
+        if entity is None:
+            return
+        return self._repository.delete_all_files(self._context.user_id)
 
 class DiscountFacade(BaseFacade):
     def __init__(self, context):

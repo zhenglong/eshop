@@ -145,6 +145,7 @@ angular.module('App', ['utility','base'])
 		};
 		
 		(function onInitialize() {
+			$scope.base.onInitialize();
 			ajax.get(actions.fetchCategories, { listFlat : true })
 				.success(function(result) {
 					$scope.categories = result.data;

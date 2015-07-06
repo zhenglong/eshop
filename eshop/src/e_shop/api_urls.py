@@ -34,5 +34,6 @@ urlpatterns = patterns('',
     url(r'^file/(?P<file_id>\d+)', apis.file_data.as_view()),
     url(r'^file/upload-from-ckeditor/', apis.file_upload_from_ckeditor.as_view()),
     url(r'^user-profile/upload-photo/', apis.file_upload_from_user.as_view()),
+    url(r'^user-profile/get-photo/', apis.get_user_photo.as_view()),
     url(r'^user-profile/', apis.user_profile.as_view())
 )

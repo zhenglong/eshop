@@ -135,6 +135,7 @@ angular.module('App', ['utility', 'ui.select', 'ngSanitize','base'])
 			}
 		};
 		(function onInitialize() {
+			$scope.base.onInitialize();
 			ajax.get(actions.fetchCategories, { listFlat : true })
 				.success(function(result) {
 					$scope.categories = result.data;

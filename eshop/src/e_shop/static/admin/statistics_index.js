@@ -9,6 +9,7 @@ require(['echarts', 'echarts/chart/bar', 'echarts/chart/line'], function(ec) {
 	.controller('MainCtrl', ['$scope', 'ajax', 'base', function($scope, ajax, base) {
 		$scope.base = base;
 		(function onInitialize() {
+			$scope.base.onInitialize();
 			var myChart = ec.init(document.getElementById('chart-container'));
 			myChart.setOption({
 				tooltip : {

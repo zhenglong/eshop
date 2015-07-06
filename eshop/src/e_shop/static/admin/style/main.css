@@ -38,13 +38,13 @@ label.my-checkbox span {/* <-- style the artificial checkbox */
 }
 
 .user-header-photo {
-	background-color:white;
+	background-color:wheat;
 	width:2rem;
 	height:2rem;
 	border-radius:1rem;
-	border:1px solid #efefef;
 	display:inline-block;
 	vertical-align:middle;
+	overflow:hidden;
 }
 .user-header-photo img {
 	width:100%;

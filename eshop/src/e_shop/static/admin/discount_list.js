@@ -28,6 +28,7 @@ angular.module('App', ['utility','base'])
 			$scope.currentEvent.type = null;
 		};
 		(function onInitialize() {
+			$scope.base.onInitialize();
 			var startDate = moment().add(-6, 'month').format(dateFormat),
 				endDate = moment().add(6, 'month').format(dateFormat);
 			ajax.get(actions.listEvents, {startDate: startDate,endDate: endDate})

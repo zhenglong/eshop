@@ -410,6 +410,16 @@ class UserRepository(BaseRepository):
         except:
             self._session.rollback()
             raise
+    def delete_all_files(self, user_id):
+        self._session.begin(subtransactions=True)
+        try:
+            user = self.get(user_id)
+            while len(user.uploadFiles)>0:
+                user.uploadFiles.remove(user.uploadFiles[0])
+            self._session.commit()
+        except:
+            self._session.rollback()
+            raise
 
 class OAuthRepository(BaseRepository):
     def __init__(self, *args, **kwargs):

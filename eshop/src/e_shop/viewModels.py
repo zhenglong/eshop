@@ -147,7 +147,7 @@ class UserViewModel(object):
         self.tel = None
         self.address = None
         self.auth_user_id = None
-        self.photo = None
+        self.photos = None
         self.__dict__.update(*args)
 
 class OAuthApplicationViewModel(BaseViewModel):

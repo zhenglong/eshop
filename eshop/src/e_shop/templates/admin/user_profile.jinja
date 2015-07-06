@@ -64,7 +64,7 @@
 		<div class="small-12 column">
 			<h2 id="addCommodityMetaModalTitle" style="font-size:1em;">
 				<div class="user-header-photo full-size">
-					<img src="{{ static("images/unknown.svg") }}" ng-click="onStartUpload()" />
+					<img ng-src="{{ '{{' }} photo.data {{ '}}' }}" ng-click="onStartUpload()" />
 					<input id="file-upload" type="file" style="display:none;"/>
 				</div>
 				<em style="font-size:1.5em;">{{ user.username }}</em>
