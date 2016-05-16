@@ -1,0 +1,9 @@
+alembic
+django
+django-cors-headers
+django_jinja 
+djangorestframework
+mysqlclient
+sqlalchemy
+sorl-thumbnail
+oauth2_provider
