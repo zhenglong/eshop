@@ -32,7 +32,7 @@ class LoginRequiredMixin(object):
 class BaseView(View):
     @staticmethod
     def json_result(data, code, message):
-        return HttpResponse(content=json.dumps({'code':code, 'message':message, 'data':data}), 
+        return HttpResponse(content=json.dumps({'code':code, 'message':message, 'data':data}),
                                     content_type='application/json')
 
 class OAuthAccessor:
@@ -51,15 +51,15 @@ class OAuthAccessor:
     @staticmethod
     def get_application(user):
         return facades.OAuthProxy().get(user.id)
-    
+
     @staticmethod
     def access_token(user, password):
         app = OAuthAccessor.get_application(user)
         r = requests.post(OAuthAccessor.oauth_host + '/o/token/', {
                                                              'grant_type':'password',
-                                                             'username':user.username, 
+                                                             'username':user.username,
                                                              'password':password
-                                                             }, 
+                                                             },
                           auth=HTTPBasicAuth(app.client_id, app.client_secret))
         return r.json()
 
@@ -89,12 +89,12 @@ class account_login(BaseView):
         template = loader.get_template('login.jinja')
         context = RequestContext(request, {'title':u'我的网店'})
         return HttpResponse(template.render(context))
-    
+
     def post(self, request):
         data = json.loads(request.body)
         user_name = data['userName']
         password = data['password']
-        
+
         user = authenticate(username= user_name, password = password)
         if user is not None:
             if user.is_active:
@@ -106,20 +106,18 @@ class account_login(BaseView):
                 return BaseView.json_result(None, message=None, code=apis.StatusCodeExtension.success)
             else:
                 # Return a 'disabled account' error message
-                return BaseView.json_result(None, message=u'帐号没有激活', code=apis.StatusCodeExtension.fail) 
+                return BaseView.json_result(None, message=u'帐号没有激活', code=apis.StatusCodeExtension.fail)
         else:
             # Return an 'invalid login' error message
             return BaseView.json_result(None, message=u'帐号或密码错误', code=apis.StatusCodeExtension.fail)
 
 def home_index(request):
     template = loader.get_template('home_index.jinja')
-    context = RequestContext(request, {'title':u'主页'})
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render({'title':u'主页'}, request))
 
 def commodity_detail(request, commodity_id):
     template = loader.get_template('commodity_detail.jinja')
-    context = RequestContext(request, {'title':u'宝贝详情'})
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render({'title':u'宝贝详情'}, request))
 
 def fill_common_info(extra_data, request):
     extra_data['ac'] = request.session['access_token']
@@ -128,59 +126,49 @@ def fill_common_info(extra_data, request):
 @login_required
 def category_list(request):
     template = loader.get_template('admin/category_list.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'分类管理','activeNav':TabIndex.category_management}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'分类管理','activeNav':TabIndex.category_management}, request), request))
 
 @login_required
 def commodity_meta_list(request):
     template = loader.get_template('admin/commodity_meta_list.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'产品参数维护', 'activeNav':TabIndex.product_param_maintain}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'产品参数维护', 'activeNav':TabIndex.product_param_maintain}, request), request))
 
 @login_required
 def commodity_list(request):
     template = loader.get_template('admin/commodity_list.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'我的宝贝', 'activeNav':TabIndex.my_product}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'我的宝贝', 'activeNav':TabIndex.my_product}, request), request))
 
 @login_required
 def add_commodity(request):
     template = loader.get_template('admin/add_commodity.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'我的宝贝', 'activeNav':TabIndex.my_product}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'我的宝贝', 'activeNav':TabIndex.my_product}, request), request))
 
 @login_required
 def update_commodity(request, commodity_id):
     template = loader.get_template('admin/add_commodity.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'我的宝贝', 'activeNav':TabIndex.my_product, 'commodity_id':commodity_id}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'我的宝贝', 'activeNav':TabIndex.my_product, 'commodity_id':commodity_id}, request), request))
 
 @login_required
 def brand_list(request):
     template = loader.get_template('admin/brand_list.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'品牌管理', 'activeNav':TabIndex.brand_management}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(cfill_common_info({'title':u'品牌管理', 'activeNav':TabIndex.brand_management}, request), request))
 
 @login_required
 def discount_list(request):
     template = loader.get_template('admin/discount_list.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'营销活动', 'activeNav':TabIndex.discount_management}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'营销活动', 'activeNav':TabIndex.discount_management}, request), request))
 
 @login_required
 def statistics_index(request):
     template = loader.get_template('admin/statistics_index.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'销售额汇总', 'manualSetup':True, 'activeNav':TabIndex.sale_statistics}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'销售额汇总', 'manualSetup':True, 'activeNav':TabIndex.sale_statistics}, request), request))
 
 @login_required
 def statistics_commodity_index(request):
     template = loader.get_template('admin/statistics_commodity_index.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'单品分析', 'manualSetup':True, 'activeNav':TabIndex.sale_statistics}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'单品分析', 'manualSetup':True, 'activeNav':TabIndex.sale_statistics}, request), request))
 
 @login_required
 def statistics_category_index(request):
     template = loader.get_template('admin/statistics_category_index.jinja')
-    context = RequestContext(request, fill_common_info({'title':u'分类汇总', 'manualSetup':True, 'activeNav':TabIndex.sale_statistics}, request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(fill_common_info({'title':u'分类汇总', 'manualSetup':True, 'activeNav':TabIndex.sale_statistics}, request), request))

@@ -22,28 +22,31 @@ SECRET_KEY = '7rar^1x5r1wj3b1szuo($*5tf1f-u@(=@)0(#cu$i(h65lk(*p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
-TEMPLATE_LOADERS = (
-                    'django_jinja.loaders.FileSystemLoader',
-                    'django_jinja.loaders.AppLoader')
 DEFAULT_JINJA2_TEMPLATE_EXTENSION = '.jinja'
-JINJA2_EXTENSIONS = [
-                    # The default extensions, you should include them
-                    # if you are overwritting the settings.
-                    "jinja2.ext.do",
-                    "jinja2.ext.loopcontrols",
-                    "jinja2.ext.with_",
-                    "jinja2.ext.i18n",
-                    "jinja2.ext.autoescape",
-                    "django_jinja.builtins.extensions.CsrfExtension",
-                    "django_jinja.builtins.extensions.CacheExtension",
-                    "django_jinja.builtins.extensions.TimezoneExtension",
-                    "django_jinja.builtins.extensions.UrlsExtension",
-                    #"django_jinja.builtins.extensions.StaticFilesExtension",
-                    "django_jinja.builtins.extensions.DjangoFiltersExtension",
-                    'e_shop.extensions.StaticFileVersioningExtension'
-                    ]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [os.path.join(BASE_DIR, 'e_shop/templates')],
+        'OPTIONS': {
+            'extensions': [
+                                # The default extensions, you should include them
+                                # if you are overwritting the settings.
+                                "jinja2.ext.do",
+                                "jinja2.ext.loopcontrols",
+                                "jinja2.ext.with_",
+                                "jinja2.ext.i18n",
+                                "jinja2.ext.autoescape",
+                                # "django_jinja.builtins.extensions.CsrfExtension",
+                                # "django_jinja.builtins.extensions.CacheExtension",
+                                # "django_jinja.builtins.extensions.TimezoneExtension",
+                                # "django_jinja.builtins.extensions.UrlsExtension",
+                                #"django_jinja.builtins.extensions.StaticFilesExtension",
+                                # "django_jinja.builtins.extensions.DjangoFiltersExtension",
+                                'e_shop.extensions.StaticFileVersioningExtension'
+                                ]
+        }
+    }
+]
 
 ALLOWED_HOSTS = []
 
@@ -57,7 +60,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_jinja',
     'sorl.thumbnail',
     'corsheaders',
     'oauth2_provider',

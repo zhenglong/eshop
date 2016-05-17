@@ -3,10 +3,10 @@ Created on Apr 19, 2015
 
 @author: tristan
 '''
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 import apis
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^categories/', apis.category_list.as_view()),
     url(r'^category/', apis.category_save.as_view()),
     url(r'^commodity-metas/', apis.commodity_meta_list.as_view()),
@@ -36,4 +36,4 @@ urlpatterns = patterns('',
     url(r'^user-profile/upload-photo/', apis.file_upload_from_user.as_view()),
     url(r'^user-profile/get-photo/', apis.get_user_photo.as_view()),
     url(r'^user-profile/', apis.user_profile.as_view())
-)
+]

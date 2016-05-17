@@ -1,8 +1,8 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 import views
 from django.contrib import admin
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
     # url(r'^$', 'e_shop.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
@@ -25,4 +25,4 @@ urlpatterns = patterns('',
     url(r'^manage/sale-statistics-category/', views.statistics_category_index, name='statistics_category_index'),
     url(r'^api/', include('e_shop.api_urls')),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-)
+]

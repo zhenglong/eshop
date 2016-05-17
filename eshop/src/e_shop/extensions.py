@@ -10,7 +10,7 @@ class StaticFileVersioningExtension(StaticFilesExtension):
 
     def __init__(self, environment):
         super(StaticFileVersioningExtension, self).__init__(environment)
-    
+
     def _static(self, path):
         '''
             TODO

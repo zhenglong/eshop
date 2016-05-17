@@ -1,9 +1,11 @@
 alembic
 django
 django-cors-headers
-django_jinja 
+django-jinja
 djangorestframework
 django-oauth-toolkit
+Jinja2
+pillow
 mysqlclient
 requests
 sqlalchemy
