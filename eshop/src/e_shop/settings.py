@@ -36,12 +36,12 @@ TEMPLATES = [
                                 "jinja2.ext.with_",
                                 "jinja2.ext.i18n",
                                 "jinja2.ext.autoescape",
-                                # "django_jinja.builtins.extensions.CsrfExtension",
-                                # "django_jinja.builtins.extensions.CacheExtension",
-                                # "django_jinja.builtins.extensions.TimezoneExtension",
-                                # "django_jinja.builtins.extensions.UrlsExtension",
-                                #"django_jinja.builtins.extensions.StaticFilesExtension",
-                                # "django_jinja.builtins.extensions.DjangoFiltersExtension",
+                                "django_jinja.builtins.extensions.CsrfExtension",
+                                "django_jinja.builtins.extensions.CacheExtension",
+                                "django_jinja.builtins.extensions.TimezoneExtension",
+                                "django_jinja.builtins.extensions.UrlsExtension",
+                                "django_jinja.builtins.extensions.StaticFilesExtension",
+                                "django_jinja.builtins.extensions.DjangoFiltersExtension",
                                 'e_shop.extensions.StaticFileVersioningExtension'
                                 ]
         }

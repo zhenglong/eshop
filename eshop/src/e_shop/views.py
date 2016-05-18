@@ -5,7 +5,7 @@ Created on Mar 28, 2015
 @author: tristan
 '''
 from django.http import HttpResponse
-from django.template import RequestContext, loader
+from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
@@ -67,8 +67,7 @@ class OAuthAccessor:
 class user_profile(LoginRequiredMixin, BaseView):
     def get(self, request):
         template = loader.get_template('admin/user_profile.jinja')
-        context = RequestContext(request, fill_common_info({'title':u'编辑用户资料'}, request))
-        return HttpResponse(template.render(context))
+        return HttpResponse(template.render(fill_common_info({'title':u'编辑用户资料'}, request), request))
 
 class account_register(BaseView):
     def post(self, request):
@@ -87,8 +86,7 @@ class account_logout(BaseView):
 class account_login(BaseView):
     def get(self, request):
         template = loader.get_template('login.jinja')
-        context = RequestContext(request, {'title':u'我的网店'})
-        return HttpResponse(template.render(context))
+        return HttpResponse(template.render({'title':u'我的网店'}, request))
 
     def post(self, request):
         data = json.loads(request.body)
@@ -121,6 +119,7 @@ def commodity_detail(request, commodity_id):
 
 def fill_common_info(extra_data, request):
     extra_data['ac'] = request.session['access_token']
+    extra_data['user'] = request.user
     return extra_data
 
 @login_required
@@ -151,7 +150,7 @@ def update_commodity(request, commodity_id):
 @login_required
 def brand_list(request):
     template = loader.get_template('admin/brand_list.jinja')
-    return HttpResponse(template.render(cfill_common_info({'title':u'品牌管理', 'activeNav':TabIndex.brand_management}, request), request))
+    return HttpResponse(template.render(fill_common_info({'title':u'品牌管理', 'activeNav':TabIndex.brand_management}, request), request))
 
 @login_required
 def discount_list(request):
